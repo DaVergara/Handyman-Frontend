@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title mb-3">LISTA DE TECNICOS</h5>
+    <input
+      type="text"
+      class="form-control mb-3"
+      [(ngModel)]="searchId"
+      placeholder="Buscar"
+      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+      (ngModelChange)="getTechnicianById()"
+    />
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Identificación</td>
+          <td>Nombres</td>
+          <td>Apellidos</td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let technician of listTechnicians; index as i">
+          <td>{{ technician.technicianId }}</td>
+          <td>{{ technician.name }}</td>
+          <td>{{ technician.lastName }}</td>
+          <td>
+            <i
+              (click)="updateTechnician(technician, i)"
+              class="far fa-edit text-info"
+            ></i>
+            <i
+              (click)="deleteTechnician(technician.technicianId)"
+              class="far fa-trash-alt text-danger"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

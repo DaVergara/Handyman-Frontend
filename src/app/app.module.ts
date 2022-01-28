@@ -1,16 +1,31 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
+// modules
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+//components
 import { AppComponent } from './app.component';
+import { FormTechnicianComponent } from './components/technician/components/form-technician/form-technician.component';
+import { TechnicianComponent } from './components/technician/technician.component';
+import { ListTechniciansComponent } from './components/technician/components/list-technicians/list-technicians.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FormTechnicianComponent,
+    TechnicianComponent,
+    ListTechniciansComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
