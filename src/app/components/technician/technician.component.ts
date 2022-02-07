@@ -11,4 +11,5 @@ export class TechnicianComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
 }

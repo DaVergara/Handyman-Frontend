@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title mb-3">SERVICIOS REGISTRADOS</h5>
+    <input
+      type="text"
+      class="form-control mb-3"
+      [(ngModel)]="searchId"
+      placeholder="Buscar"
+      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+      (ngModelChange)="filterById()"
+    />
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Id. Tecnico</td>
+          <td>Id. Servicio</td>
+          <td>F. Inicio</td>
+          <td>F. Finalizacion</td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let appointment of listAppointments; index as i">
+          <td>{{ appointment.technicianId }}</td>
+          <td>{{ appointment.serviceId }}</td>
+          <td>{{ appointment.serviceStarted | date: 'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ appointment.serviceFinished | date: 'yyyy-MM-dd HH:mm'}}</td>
+          <td>
+            <i
+              (click)="updateAppointment(appointment)"
+              class="far fa-edit text-info"
+            ></i>
+            <i
+              (click)="deleteTechnician(appointment.serviceId)"
+              class="far fa-trash-alt text-danger"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

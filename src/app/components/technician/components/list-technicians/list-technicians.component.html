@@ -7,7 +7,7 @@
       [(ngModel)]="searchId"
       placeholder="Buscar"
       oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-      (ngModelChange)="getTechnicianById()"
+      (ngModelChange)="filterById()"
     />
     <table class="table">
       <tbody>
@@ -19,11 +19,11 @@
         </tr>
         <tr *ngFor="let technician of listTechnicians; index as i">
           <td>{{ technician.technicianId }}</td>
-          <td>{{ technician.name }}</td>
-          <td>{{ technician.lastName }}</td>
+          <td>{{ technician.technicianName }}</td>
+          <td>{{ technician.technicianLastName }}</td>
           <td>
             <i
-              (click)="updateTechnician(technician, i)"
+              (click)="updateTechnician(technician)"
               class="far fa-edit text-info"
             ></i>
             <i

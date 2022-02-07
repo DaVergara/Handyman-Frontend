@@ -1,70 +1,56 @@
 import { TechnicianModel } from './../../models/technician';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
-// here, put all methods that you need for provide technician
-// like create, update, query or delete.
 @Injectable({
   providedIn: 'root',
 })
 export class TechnicianService {
+  private apiServerUrl: string = 'http://localhost:8080';
+
   private technician$ = new Subject<TechnicianModel>();
 
-  technicians: TechnicianModel[] = [];
-  private technicians$ = new Subject<TechnicianModel[]>();
+  private subject$ = new Subject<any>();
 
-  // With HttpClient, you can use http methods like post, put, delete and get.
-  // private readonly http: HttpClient
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   public getTechnicians(): Observable<TechnicianModel[]> {
-    return this.technicians$.asObservable();
+    return this.http.get<TechnicianModel[]>(`${this.apiServerUrl}/technicians`);
   }
 
-  public getTechnicianById(technicianId: string) {
-    console.log(technicianId);
-    if (technicianId !== '') {
-      this.technicians$.next(
-        this.technicians.filter((technician) =>
-          technician.technicianId.includes(technicianId)
-        )
-      );
-    } else {
-      this.technicians$.next(this.technicians);
-    }
+  public getTechnicianById(technicianId: string): Observable<TechnicianModel> {
+    return this.http.get<TechnicianModel>(`${this.apiServerUrl}/technicians/${technicianId}`);
   }
 
-  public createTechnicians(technician: TechnicianModel) {
-    this.technicians.push(technician);
-    this.technicians$.next(this.technicians);
-    alert('Tecnico creado satisfactoriamente.');
+  public createTechnicians(technician: TechnicianModel): Observable<TechnicianModel> {
+    return this.http.post<TechnicianModel>(`${this.apiServerUrl}/technicians`, technician);
   }
 
-  public updateTechnicians(technician: TechnicianModel, index: number) {
-    this.technicians[index].name = technician.name;
-    this.technicians[index].lastName = technician.lastName;
-    this.technicians$.next(this.technicians);
-    alert('Tecnico modificado satisfactoriamente.');
+  public updateTechnicians(technician: TechnicianModel): Observable<TechnicianModel> {
+    return this.http.put<TechnicianModel>(`${this.apiServerUrl}/technicians`, technician);
   }
 
-  public deleteTechnicians(technicianId: string) {
-    this.technicians = this.technicians.filter(
-      (technician) => technician.technicianId !== technicianId
-    );
-    this.technicians$.next(this.technicians);
-    alert('Tecnico eliminado satisfactoriamente.');
+  public deleteTechnicians(technicianId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/technicians/${technicianId}`);
   }
 
-  addTechnicianEdit(technician: TechnicianModel, index: number) {
-    const TECHNICIAN: any = {
-      index: index,
+  addTechnicianEdit(technician: TechnicianModel): void {
+    const TECHNICIAN: TechnicianModel = {
       ...technician,
     };
     this.technician$.next(TECHNICIAN);
   }
 
-  getTechnicianEdit(): Observable<any> {
+  getTechnicianEdit(): Observable<TechnicianModel> {
     return this.technician$.asObservable();
+  }
+
+  sendClickCall() {
+    this.subject$.next('');
+  }
+
+  getClickCall() {
+    return this.subject$.asObservable();
   }
 }

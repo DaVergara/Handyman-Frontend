@@ -1,3 +1,5 @@
+import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TechnicianService } from 'src/app/shared/services/technician-service/technician.service';
 import { TechnicianModel } from './../../../../shared/models/technician';
 import { Component, OnInit } from '@angular/core';
@@ -25,54 +27,76 @@ export class FormTechnicianComponent implements OnInit {
 
   title = 'Añadir Tecnico';
 
-  index: number | undefined;
-
   editFlag = false;
 
-  constructor(private _technicianService: TechnicianService) {}
+  constructor(
+    private _technicianService: TechnicianService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this._technicianService.getTechnicianEdit().subscribe((data) => {
-      this.index = data.index;
       this.editFlag = true;
       this.title = 'Editar Tecnico';
       this.technicianForm.patchValue({
         technicianId: data.technicianId,
-        name: data.name,
-        lastName: data.lastName,
+        name: data.technicianName,
+        lastName: data.technicianLastName,
       });
     });
   }
 
   saveTechnician() {
-    console.log(this.index);
     if (this.editFlag === false) {
       this.createTechnician();
     } else {
-      this.editTechnician(this.index);
+      this.editTechnician();
     }
   }
 
   createTechnician() {
     const TECHNICIAN: TechnicianModel = {
       technicianId: this.technicianForm.value.technicianId,
-      name: this.technicianForm.value.name,
-      lastName: this.technicianForm.value.lastName,
+      technicianName: this.technicianForm.value.name,
+      technicianLastName: this.technicianForm.value.lastName,
     };
-
-    this._technicianService.createTechnicians(TECHNICIAN);
-    this.technicianForm.reset();
+    this._technicianService.createTechnicians(TECHNICIAN).subscribe({
+      next: () => {
+        this.technicianForm.reset();
+        this.toastr.success('Tecnico creado satisfactoriamente');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(
+          error.error.message,
+          'Opps... ocurrio un error.'
+        );
+      },
+      complete: () => this._technicianService.sendClickCall(),
+    });
   }
 
-  editTechnician(index: number) {
+  editTechnician() {
     const TECHNICIAN: TechnicianModel = {
       technicianId: this.technicianForm.value.technicianId,
-      name: this.technicianForm.value.name,
-      lastName: this.technicianForm.value.lastName,
+      technicianName: this.technicianForm.value.name,
+      technicianLastName: this.technicianForm.value.lastName,
     };
-    this._technicianService.updateTechnicians(TECHNICIAN, index);
+    this._technicianService.updateTechnicians(TECHNICIAN).subscribe({
+      next: () => {
+        this.technicianForm.reset();
+        this.toastr.success('Tecnico modificado satisfactoriamente.');
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(
+          error.error.message,
+          'Opps... ocurrio un error.'
+        );
+        this._technicianService.sendClickCall();
+        this.technicianForm.reset();
+      },
+      complete: () => this._technicianService.sendClickCall(),
+    });
     this.title = 'Añadir Tecnico';
-    this.technicianForm.reset();
     this.editFlag = false;
   }
 }

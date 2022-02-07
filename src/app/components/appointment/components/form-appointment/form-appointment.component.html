@@ -1,0 +1,116 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title mb-3">
+      {{ title | uppercase }}
+    </h5>
+    <form [formGroup]="appointmentForm" (ngSubmit)="saveAppointment()">
+      <div class="form-floating mb-3" *ngIf="editFlag">
+        <input
+          type="text"
+          formControlName="serviceId"
+          class="form-control form-control-lg"
+          [attr.disabled]="editFlag ? '' : null"
+          placeholder="Identificación Servicio"
+          [class.valid]="this.appointmentForm.get('technicianId')?.valid"
+          [class.invalid]="
+            this.appointmentForm.get('technicianId')?.invalid &&
+            this.appointmentForm.get('technicianId')?.touched
+          "
+        />
+        <label for="serviceId" class="control-label" style="font-size: 120%">Identificación Servicio</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          formControlName="technicianId"
+          class="form-control form-control-lg"
+          placeholder="Identificación Técnico"
+          [attr.disabled]="editFlag ? '' : null"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+          [class.valid]="this.appointmentForm.get('technicianId')?.valid"
+          [class.invalid]="
+            this.appointmentForm.get('technicianId')?.invalid &&
+            this.appointmentForm.get('technicianId')?.touched
+          "
+        />
+        <label for="technicianId" class="control-label" style="font-size: 120%">Identificación Técnico</label>
+        <div>
+          <small
+            class="text-danger"
+            *ngIf="
+              this.appointmentForm.get('technicianId')?.hasError('required') &&
+              this.appointmentForm.get('technicianId')?.touched
+            "
+          >
+            La identificación del tecnico es requerida.
+          </small>
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="datetime-local"
+          min="2022-01-01T00:00"
+          max="2023-01-01T00:00"
+          formControlName="serviceStarted"
+          class="form-control"
+          [class.valid]="this.appointmentForm.get('serviceStarted')?.valid"
+          [class.invalid]="
+            this.appointmentForm.get('serviceStarted')?.invalid &&
+            this.appointmentForm.get('serviceStarted')?.touched
+          "
+        />
+        <label for="serviceStarted" class="control-label" style="font-size: 120%">Fecha Inicio</label>
+        <div>
+          <small
+            class="text-danger"
+            *ngIf="
+              this.appointmentForm
+                .get('serviceStarted')
+                ?.hasError('required') &&
+              this.appointmentForm.get('serviceStarted')?.touched
+            "
+          >
+            La fecha de inicio es requerida.
+          </small>
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="datetime-local"
+          min="2022-01-01T00:00"
+          max="2023-01-01T00:00"
+          formControlName="serviceFinished"
+          class="form-control"
+          [class.valid]="this.appointmentForm.get('serviceFinished')?.valid"
+          [class.invalid]="
+            this.appointmentForm.get('serviceFinished')?.invalid &&
+            this.appointmentForm.get('serviceFinished')?.touched
+          "
+        />
+        <label for="serviceFinished" style="font-size: 120%">Servicio Fin</label>
+        <div>
+          <small
+            class="text-danger"
+            *ngIf="
+              this.appointmentForm
+                .get('serviceFinished')
+                ?.hasError('required') &&
+              this.appointmentForm.get('serviceFinished')?.touched
+            "
+          >
+            La fecha de fin es requerida.
+          </small>
+        </div>
+      </div>
+      <div class="d-grid gap-2">
+        <button
+          [disabled]="appointmentForm.invalid"
+          class="btn btn-success btn-lg"
+          type="submit"
+        >
+          Aceptar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
