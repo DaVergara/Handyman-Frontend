@@ -40,7 +40,12 @@ export class ListTechniciansComponent implements OnInit {
   getTechnicians(): void {
     this.subscription = this._technicianService.getTechnicians().subscribe({
       next: (response: TechnicianModel[]) => (this.listTechnicians = response),
-      error: (error: HttpErrorResponse) => alert(error.message),
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(
+          error.error.message,
+          'Opps... ocurrio un error.'
+        );
+      },
     });
   }
 
@@ -62,7 +67,12 @@ export class ListTechniciansComponent implements OnInit {
       .getTechnicianById(this.searchId)
       .subscribe({
         next: (response: TechnicianModel) => (this.technician = response),
-        error: (error: HttpErrorResponse) => alert(JSON.stringify(error.error)),
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(
+            error.error.message,
+            'Opps... ocurrio un error.'
+          );
+        },
       });
   }
 

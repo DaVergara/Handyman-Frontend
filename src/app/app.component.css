@@ -7,6 +7,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.navbar {
+  background: #ffffff8f;
+}
+
 h1,
 h2,
 h3,

@@ -7,17 +7,17 @@
       <div class="form-floating mb-3" *ngIf="editFlag">
         <input
           type="text"
-          formControlName="serviceId"
+          formControlName="appointmentId"
           class="form-control form-control-lg"
           [attr.disabled]="editFlag ? '' : null"
-          placeholder="Identificación Servicio"
-          [class.valid]="this.appointmentForm.get('technicianId')?.valid"
+          placeholder="Identificación Cita"
+          [class.valid]="this.appointmentForm.get('appointmentId')?.valid"
           [class.invalid]="
-            this.appointmentForm.get('technicianId')?.invalid &&
-            this.appointmentForm.get('technicianId')?.touched
+            this.appointmentForm.get('appoinmtmentId')?.invalid &&
+            this.appointmentForm.get('appointmentId')?.touched
           "
         />
-        <label for="serviceId" class="control-label" style="font-size: 120%">Identificación Servicio</label>
+        <label for="serviceId" class="control-label" style="font-size: 120%">Identificación Cita</label>
       </div>
       <div class="form-floating mb-3">
         <input
@@ -43,6 +43,32 @@
             "
           >
             La identificación del tecnico es requerida.
+          </small>
+        </div>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          formControlName="serviceId"
+          class="form-control form-control-lg"
+          [attr.disabled]="editFlag ? '' : null"
+          placeholder="Identificación Servicio"
+          [class.valid]="this.appointmentForm.get('serviceId')?.valid"
+          [class.invalid]="
+            this.appointmentForm.get('serviceId')?.invalid &&
+            this.appointmentForm.get('serviceId')?.touched
+          "
+        />
+        <label for="serviceId" class="control-label" style="font-size: 120%">Identificación Servicio</label>
+        <div>
+          <small
+            class="text-danger"
+            *ngIf="
+              this.appointmentForm.get('serviceId')?.hasError('required') &&
+              this.appointmentForm.get('serviceId')?.touched
+            "
+          >
+            La identificación del servicio es requerida.
           </small>
         </div>
       </div>

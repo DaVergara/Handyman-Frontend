@@ -27,8 +27,8 @@ export class AppointmentService {
     return this.http.put<AppointmentModel>(`${this.apiServerUrl}/appointments`, appointment);
   }
 
-  public deleteAppointment(serviceId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/appointments/service/${serviceId}`);
+  public deleteAppointment(appointmenteId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/appointments/appointment/${appointmenteId}`);
   }
 
   addAppointmentEdit(appointment: AppointmentModel): void {

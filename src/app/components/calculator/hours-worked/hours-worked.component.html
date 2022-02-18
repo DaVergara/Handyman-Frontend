@@ -5,27 +5,27 @@
       <tbody>
         <tr>
           <td>Horas Normales</td>
-          <td>{{ hoursWorked?.get('Horas Normales') }} h</td>
+          <td>{{ hoursWorked?.get('Horas Normales') / 60 | number:'2.2-2'}} h</td>
         </tr>
         <tr>
           <td>Horas Nocturnas</td>
-          <td>{{  hoursWorked?.get('Horas Nocturnas') }} h</td>
+          <td>{{  hoursWorked?.get('Horas Nocturnas') / 60 | number:'2.2-2' }} h</td>
         </tr>
         <tr>
           <td>Horas Dominicales</td>
-          <td>{{  hoursWorked?.get('Horas Dominicales') }} h</td>
+          <td>{{  hoursWorked?.get('Horas Dominicales') / 60 | number:'2.2-2' }} h</td>
         </tr>
         <tr>
           <td>Horas Normales Extra</td>
-          <td>{{  hoursWorked?.get('Horas Normales Extra') }} h</td>
+          <td>{{  hoursWorked?.get('Horas Normales Extra') / 60 | number:'2.2-2' }} h</td>
         </tr>
         <tr>
           <td>Horas Nocturnas Extra</td>
-          <td>{{ hoursWorked?.get('Horas Nocturnas Extra') }} h</td>
+          <td>{{ hoursWorked?.get('Horas Nocturnas Extra') / 60 | number:'2.2-2' }} h</td>
         </tr>
         <tr>
           <td>Horas Dominicales Extra</td>
-          <td>{{  hoursWorked?.get('Horas Dominicales Extra') }} h</td>
+          <td>{{  hoursWorked?.get('Horas Dominicales Extra') / 60 | number:'2.2-2' }} h</td>
         </tr>
       </tbody>
     </table>

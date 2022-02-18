@@ -13,10 +13,10 @@ export class CalculatorService {
 
   private subject$ = new Subject<any>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   public getAppointmentsOfWeek(technicianId: string ,weekNumber: number): Observable<AppointmentModel[]> {
-    return this.http.get<AppointmentModel[]>(`${this.apiServerUrl}/hours_worked/appointments/technician/${technicianId}/week/${weekNumber}`);
+    return this.http.get<AppointmentModel[]>(`${this.apiServerUrl}/appointments/technician/${technicianId}/week/${weekNumber}`);
 
   }
 

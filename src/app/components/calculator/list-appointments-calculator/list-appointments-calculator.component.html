@@ -3,6 +3,7 @@
     <h5 class="card-title mb-3">CONSULTAR TECNICO</h5>
     <div class="row">
       <div class="col-lg-6">
+        <label>Id. Tecnico</label>
         <input
           type="text"
           [(ngModel)]="technicianId"
@@ -12,6 +13,7 @@
         />
       </div>
       <div class="col-lg-3">
+        <label>Semana</label>
         <input
           type="number"
           min="1"
@@ -23,17 +25,20 @@
         />
       </div>
       <div class="col-lg-3">
+        <br>
         <button class="btn btn-success" (click)="getAppointmentsOfWeek()" [disabled]="technicianId.length === 0">Calcular</button>
       </div>
     </div>
     <table class="table">
       <tbody>
         <tr>
+          <td>Id. Cita</td>
           <td>Id. Servicio</td>
           <td>F. Inicio</td>
           <td>F. Finalizacion</td>
         </tr>
         <tr *ngFor="let appointment of listAppointments; index as i">
+          <td>{{ appointment.appointmentId }}</td>
           <td>{{ appointment.serviceId }}</td>
           <td>{{ appointment.serviceStarted | date: "yyyy-MM-dd hh:mm a" }}</td>
           <td>{{ appointment.serviceFinished | date: "yyyy-MM-dd hh:mm a" }}</td>

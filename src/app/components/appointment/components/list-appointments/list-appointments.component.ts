@@ -42,7 +42,12 @@ export class ListAppointmentsComponent implements OnInit {
     this.subscription = this._appointmentService.getAppointments().subscribe({
       next: (response: AppointmentModel[]) =>
         (this.listAppointments = response),
-      error: (error: HttpErrorResponse) => alert(error.message),
+        error: (error: HttpErrorResponse) => {
+          this.toastr.error(
+            error.error.message,
+            'Opps... ocurrio un error.'
+          );
+        },
     });
   }
 
@@ -56,9 +61,9 @@ export class ListAppointmentsComponent implements OnInit {
     this._appointmentService.addAppointmentEdit(appointment);
   }
 
-  deleteTechnician(serviceId: string): void {
+  deleteTechnician(appointmentId: string): void {
     this.subscription = this._appointmentService
-      .deleteAppointment(serviceId)
+      .deleteAppointment(appointmentId)
       .subscribe({
         next: () => {
           this.getAppointments();
