@@ -12,21 +12,22 @@ import { AppointmentService } from 'src/app/shared/services/appointment-service/
 })
 export class ListAppointmentsComponent implements OnInit {
   public listAppointments: AppointmentModel[];
+  public showAppointments: AppointmentModel[];
   public appoitnment: AppointmentModel;
 
-  message: string;
+  public message: string;
 
   public searchId: string = '';
 
   private subscription: Subscription;
 
   constructor(
-    private _appointmentService: AppointmentService,
-    private toastr: ToastrService
+    private readonly _appointmentService: AppointmentService,
+    private readonly toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.getAppointments();
+    this.getAllAppointments();
     this.onSave();
   }
 
@@ -34,25 +35,30 @@ export class ListAppointmentsComponent implements OnInit {
     this.subscription = this._appointmentService
       .getClickCall()
       .subscribe(() => {
-        this.getAppointments();
+        this.getAllAppointments();
       });
   }
 
-  getAppointments(): void {
+  getAllAppointments(): void {
     this.subscription = this._appointmentService.getAppointments().subscribe({
       next: (response: AppointmentModel[]) =>
         (this.listAppointments = response),
-        error: (error: HttpErrorResponse) => {
-          this.toastr.error(
-            error.error.message,
-            'Opps... ocurrio un error.'
-          );
-        },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+      },
+      complete: () => this.showAppointments = this.listAppointments,
     });
   }
 
   filterById(): void {
-
+    if (this.searchId !== '') {
+      this.showAppointments = this.listAppointments.filter(
+        (appointment: AppointmentModel) =>
+          appointment.appointmentId.includes(this.searchId)
+      );
+    } else {
+      this.getAllAppointments();
+    }
   }
 
   getAppointmentByServiceId(): void {}
@@ -66,19 +72,16 @@ export class ListAppointmentsComponent implements OnInit {
       .deleteAppointment(appointmentId)
       .subscribe({
         next: () => {
-          this.getAppointments();
+          this.getAllAppointments();
           this.toastr.success('Servicio Eliminado');
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(
-            error.error.message,
-            'Opps... ocurrio un error.'
-          );
+          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
         },
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }

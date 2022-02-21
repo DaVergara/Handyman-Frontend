@@ -3,7 +3,7 @@
     <h5 class="card-title mb-3">
       {{ title | uppercase }}
     </h5>
-    <form [formGroup]="appointmentForm" (ngSubmit)="saveAppointment()">
+    <form [formGroup]="appointmentForm" (ngSubmit)="onFormSubmit()">
       <div class="form-floating mb-3" *ngIf="editFlag">
         <input
           type="text"

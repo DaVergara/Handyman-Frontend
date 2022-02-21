@@ -30,6 +30,10 @@ export class FormAppointmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getAppointmentEdit()
+  }
+
+  getAppointmentEdit(): void {
     this._appointmentService.getAppointmentEdit().subscribe((data: AppointmentModel) => {
       this.editFlag = true;
       this.title = 'Editar Servicio';
@@ -43,7 +47,7 @@ export class FormAppointmentComponent implements OnInit {
     });
   }
 
-  saveAppointment(): void {
+  onFormSubmit(): void {
     if (this.editFlag === false) {
       this.createAppoitment();
     } else {

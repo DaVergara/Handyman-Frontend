@@ -13,40 +13,44 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class FormTechnicianComponent implements OnInit {
   technicianForm = new FormGroup({
     technicianId: new FormControl('', [Validators.required]),
-    name: new FormControl('', [
+    technicianName: new FormControl('', [
       Validators.required,
       Validators.maxLength(40),
       Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
     ]),
-    lastName: new FormControl('', [
+    technicianLastName: new FormControl('', [
       Validators.required,
       Validators.maxLength(40),
       Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
     ]),
   });
 
-  title = 'Añadir Tecnico';
+  public title = 'Añadir Tecnico';
 
-  editFlag = false;
+  public editFlag = false;
 
   constructor(
-    private _technicianService: TechnicianService,
-    private toastr: ToastrService
+    private readonly _technicianService: TechnicianService,
+    private readonly toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this._technicianService.getTechnicianEdit().subscribe((data) => {
+    this.getTechnicianEdit();
+  }
+
+  getTechnicianEdit(): void {
+    this._technicianService.getTechnicianEdit().subscribe((data: TechnicianModel) => {
       this.editFlag = true;
       this.title = 'Editar Tecnico';
       this.technicianForm.patchValue({
         technicianId: data.technicianId,
-        name: data.technicianName,
-        lastName: data.technicianLastName,
+        technicianName: data.technicianName,
+        technicianLastName: data.technicianLastName,
       });
     });
   }
 
-  saveTechnician() {
+  onSubmit(): void {
     if (this.editFlag === false) {
       this.createTechnician();
     } else {
@@ -54,13 +58,13 @@ export class FormTechnicianComponent implements OnInit {
     }
   }
 
-  createTechnician() {
-    const TECHNICIAN: TechnicianModel = {
+  createTechnician(): void {
+    const technician: TechnicianModel = {
       technicianId: this.technicianForm.value.technicianId,
-      technicianName: this.technicianForm.value.name,
-      technicianLastName: this.technicianForm.value.lastName,
+      technicianName: this.technicianForm.value.technicianName,
+      technicianLastName: this.technicianForm.value.technicianLastName,
     };
-    this._technicianService.createTechnicians(TECHNICIAN).subscribe({
+    this._technicianService.createTechnicians(technician).subscribe({
       next: () => {
         this.technicianForm.reset();
         this.toastr.success('Tecnico creado satisfactoriamente');
@@ -75,13 +79,13 @@ export class FormTechnicianComponent implements OnInit {
     });
   }
 
-  editTechnician() {
-    const TECHNICIAN: TechnicianModel = {
+  editTechnician(): void {
+    const technician: TechnicianModel = {
       technicianId: this.technicianForm.value.technicianId,
-      technicianName: this.technicianForm.value.name,
-      technicianLastName: this.technicianForm.value.lastName,
+      technicianName: this.technicianForm.value.technicianName,
+      technicianLastName: this.technicianForm.value.technicianLastName,
     };
-    this._technicianService.updateTechnicians(TECHNICIAN).subscribe({
+    this._technicianService.updateTechnicians(technician).subscribe({
       next: () => {
         this.technicianForm.reset();
         this.toastr.success('Tecnico modificado satisfactoriamente.');

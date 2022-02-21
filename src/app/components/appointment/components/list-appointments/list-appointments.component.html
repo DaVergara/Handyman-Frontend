@@ -6,7 +6,6 @@
       class="form-control mb-3"
       [(ngModel)]="searchId"
       placeholder="Buscar"
-      oninput="this.value = this.value.replace(/[^0-9]/g, '');"
       (ngModelChange)="filterById()"
     />
     <table class="table">
@@ -19,7 +18,7 @@
           <td>F. Finalizacion</td>
           <td></td>
         </tr>
-        <tr *ngFor="let appointment of listAppointments; index as i">
+        <tr *ngFor="let appointment of showAppointments; index as i">
           <td>{{ appointment.appointmentId }}</td>
           <td>{{ appointment.technicianId }}</td>
           <td>{{ appointment.serviceId }}</td>

@@ -1,25 +1,28 @@
-//import { element } from 'protractor';
+import { Observable, of, throwError } from 'rxjs';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 import { TechnicianService } from 'src/app/shared/services/technician-service/technician.service';
-import { TechnicianModel } from './../../../../shared/models/technician';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ComponentFixture, inject, TestBed, async } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 
 import { FormTechnicianComponent } from './form-technician.component';
-import { By } from '@angular/platform-browser';
+import { TechnicianServiceMock } from 'src/app/shared/mocks/TechnicianServiceMock.mock';
+import { technicianValidMock, technicianEmptyMock } from './../../../../shared/mocks/technician.mock';
 
-describe('FormTechnicianComponent', () => {
+fdescribe('FormTechnicianComponent', () => {
+
+  const technicianServiceMock = new TechnicianServiceMock() ;
+
   let component: FormTechnicianComponent;
   let fixture: ComponentFixture<FormTechnicianComponent>;
-  let technicianService;
-  let formTechnicianComponent;
-  let element;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientModule, ToastrModule.forRoot()],
       declarations: [FormTechnicianComponent],
-      providers: [TechnicianService],
+      providers: [
+        {provide: TechnicianService, useValue: technicianServiceMock},
+      ],
     }).compileComponents();
   });
 
@@ -29,45 +32,115 @@ describe('FormTechnicianComponent', () => {
     fixture.detectChanges();
   });
 
-  beforeEach(inject([TechnicianService], s => {
-    technicianService = s;
-    fixture = TestBed.createComponent(FormTechnicianComponent);
-    formTechnicianComponent = fixture.componentInstance;
-    element = fixture.nativeElement;
-  }));
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it ('Invalid form', () => {
-    const fixture = TestBed.createComponent(FormTechnicianComponent);
-    const app = fixture.componentInstance;
-    fixture.detectChanges;
+  describe('[Form Validations]', () => {
+    describe('Control "technicianId"', () => {
 
-    const form = app.technicianForm;
-    const id = app.technicianForm.controls['technicianId'];
-    id.setValue('1036671649');
-    expect(form.invalid).toBeTrue();
+      it('Technician id must be required', () => {
+        const technicianIdControl = component.technicianForm.get('technicianId');
+        const emptyValue = '';
+
+        technicianIdControl.setValue(emptyValue);
+
+        expect(technicianIdControl.errors?.['required']).toBeTruthy();
+        expect(technicianIdControl.valid).toBeFalse();
+      })
+
+    });
+    describe('Control "technicianName', () => {
+
+      it('Technician name must be required', () => {
+        const technicianNameControl = component.technicianForm.get('technicianName');
+        const emptyValue = '';
+
+        technicianNameControl.setValue(emptyValue);
+
+        expect(technicianNameControl.errors?.['required']).toBeTruthy();
+        expect(technicianNameControl.valid).toBeFalse();
+      })
+
+      it('Technician name can not be longer than 40 chars', () => {
+        const technicianNameControl = component.technicianForm.get('technicianName');
+        const invalidValue = 'Lorem ipsum dolor sit amet viverra fusce.';
+
+        technicianNameControl.setValue(invalidValue);
+
+        expect(technicianNameControl.errors?.['maxlenght']).toBeTruthy;
+        expect(technicianNameControl.valid).toBeFalse();
+      })
+
+      it('Technician name can not contain special chars', () => {
+        const technicianNameControl = component.technicianForm.get('technicianName');
+        const invalidValue = 'D@vid';
+
+        technicianNameControl.setValue(invalidValue);
+
+        expect(technicianNameControl.errors?.['pattern']).toBeTruthy;
+        expect(technicianNameControl.valid).toBeFalse();
+      })
+
+    });
+    describe('Control "technicianLastName', () => {
+
+      it('Technician last name must be required', () => {
+        const technicianLastNameControl = component.technicianForm.get('technicianLastName');
+        const emptyValue = '';
+
+        technicianLastNameControl.setValue(emptyValue);
+
+        expect(technicianLastNameControl.errors?.['required']).toBeTruthy();
+        expect(technicianLastNameControl.valid).toBeFalse();
+      })
+
+      it('Technician last name can not be longer than 40 chars', () => {
+        const technicianLastNameControl = component.technicianForm.get('technicianLastName');
+        const invalidValue = 'Lorem ipsum dolor sit amet viverra fusce.';
+
+        technicianLastNameControl.setValue(invalidValue);
+
+        expect(technicianLastNameControl.errors?.['maxlenght']).toBeTruthy;
+        expect(technicianLastNameControl.valid).toBeFalse();
+      })
+
+      it('Technician last name can not contain special chars', () => {
+        const technicianLastNameControl = component.technicianForm.get('technicianLastName');
+        const invalidValue = 'Vergar@';
+
+        technicianLastNameControl.setValue(invalidValue);
+
+        expect(technicianLastNameControl.errors?.['pattern']).toBeTruthy;
+        expect(technicianLastNameControl.valid).toBeFalse();
+      })
+
+    });
   });
 
-  it('something', () => {
-    const fixture = TestBed.createComponent(FormTechnicianComponent);
-    const app = fixture.componentInstance;
-    fixture.detectChanges;
+  describe('[Method createTechnician]', () => {
 
-    const id = app.technicianForm.controls['technicianId'];
-    const name = app.technicianForm.controls['name'];
-    const lastName = app.technicianForm.controls['lastName'];
+    it('Create technician success', fakeAsync(() => {
+      const technicianMock = {...technicianValidMock}
+      component.technicianForm.setValue(technicianMock);
+      technicianServiceMock.createTechnicians.and.returnValue(of('Success'));
 
-    id.setValue('101010');
-    name.setValue('David');
-    lastName.setValue('Vergara');
+      component.createTechnician();
 
-    const btnElement = fixture.debugElement.query(By.css('button.btn'));
-    btnElement.nativeElement.click();
+      expect(technicianServiceMock.createTechnicians).toHaveBeenCalledWith(technicianMock);
+      flush();
+    }));
 
-    expect(1).toEqual(1);
-  })
+    it('Create technician failure', () => {
+      const technicianMock = {...technicianEmptyMock}
+      component.technicianForm.setValue(technicianMock);
+      const spyresetForm = spyOn(component.technicianForm, 'reset');
+      technicianServiceMock.createTechnicians.and.returnValue(throwError(() => new Error('Error')));
+
+      component.createTechnician();
+
+      expect(spyresetForm).not.toHaveBeenCalled();
+    });
+  });
 
 });

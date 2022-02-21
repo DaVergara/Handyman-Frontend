@@ -12,14 +12,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListAppointmentsCalculatorComponent implements OnInit {
   public listAppointments: AppointmentModel[];
+  public showAppointments: AppointmentModel[];
   private subscription: Subscription;
 
   public technicianId: string = '';
   public weekNumber: number = 1;
 
   constructor(
-    private _calculatorService: CalculatorService,
-    private toastr: ToastrService
+    private readonly _calculatorService: CalculatorService,
+    private readonly toastr: ToastrService
   ) {}
 
   ngOnInit(): void {}

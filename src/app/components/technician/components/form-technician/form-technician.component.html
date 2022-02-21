@@ -3,7 +3,7 @@
     <h5 class="card-title mb-3">
       {{ title | uppercase }}
     </h5>
-    <form [formGroup]="technicianForm" (ngSubmit)="saveTechnician()">
+    <form [formGroup]="technicianForm" (ngSubmit)="onSubmit()">
       <div class="form-floating mb-3">
         <input
           type="text"
@@ -34,22 +34,22 @@
       <div class="form-floating mb-3">
         <input
           type="text"
-          formControlName="name"
+          formControlName="technicianName"
           class="form-control form-control-lg"
           placeholder="Nombre"
-          [class.valid]="this.technicianForm.get('name')?.valid"
+          [class.valid]="this.technicianForm.get('technicianName')?.valid"
           [class.invalid]="
-            this.technicianForm.get('name')?.invalid &&
-            this.technicianForm.get('name')?.touched
+            this.technicianForm.get('technicianName')?.invalid &&
+            this.technicianForm.get('technicianName')?.touched
           "
         />
-        <label for="name" style="font-size: 120%">Nombre</label>
+        <label for="technicianName" style="font-size: 120%">Nombre</label>
         <div>
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('name')?.hasError('required') &&
-              this.technicianForm.get('name')?.touched
+              this.technicianForm.get('technicianName')?.hasError('required') &&
+              this.technicianForm.get('technicianName')?.touched
             "
           >
             El nombre del tecnico es requerido.
@@ -57,8 +57,8 @@
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('name')?.hasError('maxlength') &&
-              this.technicianForm.get('name')?.dirty
+              this.technicianForm.get('technicianName')?.hasError('maxlength') &&
+              this.technicianForm.get('technicianName')?.dirty
             "
           >
             El nombre no puede contener más de 40 caracteres.
@@ -66,8 +66,8 @@
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('name')?.hasError('pattern') &&
-              this.technicianForm.get('name')?.dirty
+              this.technicianForm.get('technicianName')?.hasError('pattern') &&
+              this.technicianForm.get('technicianName')?.dirty
             "
           >
             El nombre no puede contener números ni caracteres especiales.
@@ -77,22 +77,22 @@
       <div class="form-floating mb-3">
         <input
           type="text"
-          formControlName="lastName"
+          formControlName="technicianLastName"
           class="form-control form-control-lg"
           placeholder="Apellido"
-          [class.valid]="this.technicianForm.get('lastName')?.valid"
+          [class.valid]="this.technicianForm.get('technicianLastName')?.valid"
           [class.invalid]="
-            this.technicianForm.get('lastName')?.invalid &&
-            this.technicianForm.get('lastName')?.touched
+            this.technicianForm.get('technicianLastName')?.invalid &&
+            this.technicianForm.get('technicianLastName')?.touched
           "
         />
-        <label for="lastName" style="font-size: 120%">Apellido</label>
+        <label for="technicianLastName" style="font-size: 120%">Apellido</label>
         <div>
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('lastName')?.hasError('required') &&
-              this.technicianForm.get('lastName')?.touched
+              this.technicianForm.get('technicianLastName')?.hasError('required') &&
+              this.technicianForm.get('technicianLastName')?.touched
             "
           >
             El apellido del tecnico es requerido.
@@ -100,8 +100,8 @@
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('lastName')?.hasError('maxlength') &&
-              this.technicianForm.get('lastName')?.dirty
+              this.technicianForm.get('technicianLastName')?.hasError('maxlength') &&
+              this.technicianForm.get('technicianLastName')?.dirty
             "
           >
             El apellido no puede contener más de 40 caracteres.
@@ -109,8 +109,8 @@
           <small
             class="text-danger"
             *ngIf="
-              this.technicianForm.get('lastName')?.hasError('pattern') &&
-              this.technicianForm.get('lastName')?.dirty
+              this.technicianForm.get('technicianLastName')?.hasError('pattern') &&
+              this.technicianForm.get('technicianLastName')?.dirty
             "
           >
             El apellido no puede contener números ni caracteres especiales.

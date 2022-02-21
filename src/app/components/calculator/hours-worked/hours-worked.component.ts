@@ -15,19 +15,19 @@ export class HoursWorkedComponent implements OnInit {
   public hoursWorked: Map<string, number>;
 
   constructor(
-    private _calculatorService: CalculatorService,
-    private toastr: ToastrService
+    private readonly _calculatorService: CalculatorService,
+    private readonly toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.restartMap();
-    this.onSave();
+    this.onClick();
   }
 
-  onSave(): void {
+  onClick(): void {
     this.subscription = this._calculatorService
       .getClickCall()
-      .subscribe((data) => {
+      .subscribe((data: any) => {
         this.getHoursWorked(data.technicianId, data.weekNumber);
       });
   }
@@ -54,7 +54,7 @@ export class HoursWorkedComponent implements OnInit {
     .set('Horas Dominicales Extra', 0);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }

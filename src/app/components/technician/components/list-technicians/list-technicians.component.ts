@@ -13,9 +13,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class ListTechniciansComponent implements OnInit {
   public listTechnicians: TechnicianModel[];
+  public showTechnicians: TechnicianModel[];
   public technician: TechnicianModel;
 
-  message: string;
+  public message: string;
 
   public searchId: string = '';
 
@@ -27,38 +28,34 @@ export class ListTechniciansComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getTechnicians();
+    this.getAllTechnicians();
     this.onSave();
   }
 
   onSave(): void {
     this.subscription = this._technicianService.getClickCall().subscribe(() => {
-      this.getTechnicians();
+      this.getAllTechnicians();
     });
   }
 
-  getTechnicians(): void {
+  getAllTechnicians(): void {
     this.subscription = this._technicianService.getTechnicians().subscribe({
       next: (response: TechnicianModel[]) => (this.listTechnicians = response),
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(
-          error.error.message,
-          'Opps... ocurrio un error.'
-        );
+        this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
       },
+      complete: () => (this.showTechnicians = this.listTechnicians),
     });
   }
 
   filterById(): void {
-    const results: TechnicianModel[] = [];
-    for (const technician of this.listTechnicians) {
-      if (technician.technicianId.indexOf(this.searchId) !== -1) {
-        results.push(technician);
-      }
-    }
-    this.listTechnicians = results;
-    if (results.length === 0 || !this.searchId) {
-      this.getTechnicians();
+    if (this.searchId !== '') {
+      this.showTechnicians = this.listTechnicians.filter(
+        (technician: TechnicianModel) =>
+          technician.technicianId.includes(this.searchId)
+      );
+    } else {
+      this.getAllTechnicians();
     }
   }
 
@@ -68,10 +65,7 @@ export class ListTechniciansComponent implements OnInit {
       .subscribe({
         next: (response: TechnicianModel) => (this.technician = response),
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(
-            error.error.message,
-            'Opps... ocurrio un error.'
-          );
+          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
         },
       });
   }
@@ -85,19 +79,16 @@ export class ListTechniciansComponent implements OnInit {
       .deleteTechnicians(technicianId)
       .subscribe({
         next: () => {
-          this.getTechnicians();
+          this.getAllTechnicians();
           this.toastr.success('Tecnico Eliminado.');
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(
-            error.error.message,
-            'Opps... ocurrio un error.'
-          );
+          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
         },
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }

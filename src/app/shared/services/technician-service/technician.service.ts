@@ -35,22 +35,22 @@ export class TechnicianService {
     return this.http.delete<void>(`${this.apiServerUrl}/technicians/${technicianId}`);
   }
 
-  addTechnicianEdit(technician: TechnicianModel): void {
+  public addTechnicianEdit(technician: TechnicianModel): void {
     const TECHNICIAN: TechnicianModel = {
       ...technician,
     };
     this.technician$.next(TECHNICIAN);
   }
 
-  getTechnicianEdit(): Observable<TechnicianModel> {
+  public getTechnicianEdit(): Observable<TechnicianModel> {
     return this.technician$.asObservable();
   }
 
-  sendClickCall() {
+  public sendClickCall(): void {
     this.subject$.next('');
   }
 
-  getClickCall() {
+  public getClickCall():Observable<any> {
     return this.subject$.asObservable();
   }
 }
