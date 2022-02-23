@@ -17,14 +17,13 @@ export class CalculatorService {
 
   public getAppointmentsOfWeek(technicianId: string ,weekNumber: number): Observable<AppointmentModel[]> {
     return this.http.get<AppointmentModel[]>(`${this.apiServerUrl}/appointments/technician/${technicianId}/week/${weekNumber}`);
-
   }
 
-  public getHoursWorked(technicianId: string ,weekNumber: number) {
+  public getHoursWorked(technicianId: string ,weekNumber: number): any {
     return this.http.get<any>(`${this.apiServerUrl}/hours_worked/technician/${technicianId}/week/${weekNumber}`);
   }
 
-  sendClickCall(technicianId: string, weekNumber: number) {
+  sendClickCall(technicianId: string, weekNumber: number): void {
     const CONSULT: any = {
       technicianId,
       weekNumber
@@ -32,7 +31,7 @@ export class CalculatorService {
     this.subject$.next(CONSULT);
   }
 
-  getClickCall() {
+  getClickCall(): Observable<any> {
     return this.subject$.asObservable();
   }
 

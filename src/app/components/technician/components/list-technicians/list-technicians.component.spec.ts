@@ -1,78 +1,112 @@
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
+import { HttpErrorResponse } from '@angular/common/http';
 import { TechnicianModel } from './../../../../shared/models/technician';
-import { TechnicianService } from 'src/app/shared/services/technician-service/technician.service';
-import {
-  ComponentFixture,
-  inject,
-  TestBed,
-  async,
-} from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
+import { technicianValidMock } from './../../../../shared/mocks/technician.mock';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TechnicianServiceMock } from './../../../../shared/mocks/technician-service.mock';
+import { TechnicianService } from './../../../../shared/services/technician-service/technician.service';
+import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListTechniciansComponent } from './list-technicians.component';
-import { of } from 'rxjs';
 
-describe('ListTechniciansComponent', () => {
+fdescribe('ListTechniciansComponent', () => {
+  const technicianServiceMock = new TechnicianServiceMock();
+
   let component: ListTechniciansComponent;
   let fixture: ComponentFixture<ListTechniciansComponent>;
-  let technicianService;
-  let listTechnicianComponent;
-  let element;
+
+  let toastrMock: jasmine.SpyObj<ToastrService>;
 
   beforeEach(async () => {
+    toastrMock = jasmine.createSpyObj<ToastrService>('ToasterService', [
+      'error',
+      'success',
+    ]);
     await TestBed.configureTestingModule({
+      imports: [FormsModule, ToastrModule.forRoot(), BrowserAnimationsModule],
       declarations: [ListTechniciansComponent],
+      providers: [
+        { provide: TechnicianService, useValue: technicianServiceMock },
+        { provide: ToastrService, useValue: toastrMock },
+      ],
     }).compileComponents();
   });
 
   beforeEach(() => {
+    const techniciansMock: TechnicianModel[] = [];
     fixture = TestBed.createComponent(ListTechniciansComponent);
     component = fixture.componentInstance;
+    technicianServiceMock.getTechnicians.and.returnValue(of(techniciansMock));
     fixture.detectChanges();
   });
-
-  beforeEach(inject([TechnicianService], (s) => {
-    technicianService = s;
-    fixture = TestBed.createComponent(ListTechniciansComponent);
-    listTechnicianComponent = fixture.componentInstance;
-    element = fixture.nativeElement;
-  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Should call getTechnicians and return list of technicians', async(() => {
-    const response: TechnicianModel[] = [];
+  describe('[Method getAllTechnicians]', () => {
+    it('Get all technicianns succcess', () => {
+      const techniciansMock: TechnicianModel[] = [
+        { ...technicianValidMock },
+        { ...technicianValidMock },
+        { ...technicianValidMock },
+      ];
+      technicianServiceMock.getTechnicians.and.returnValue(of(techniciansMock));
 
-    spyOn(technicianService, 'getTechnicians').and.returnValue(of(response));
+      component.getAllTechnicians();
 
-    listTechnicianComponent.getTechnicians();
+      expect(component.listTechnicians).toEqual(techniciansMock);
+    });
 
-    fixture.detectChanges();
+    it('Get all technicianns failure', () => {
+      const errorResponseMock = new HttpErrorResponse({
+        error: { code: '', message: 'Error Get Technicians Mock' },
+        status: 400,
+        statusText: 'Bad Request',
+      });
+      technicianServiceMock.getTechnicians.and.returnValue(
+        throwError(() => new HttpErrorResponse(errorResponseMock))
+      );
 
-    expect(listTechnicianComponent.listTechnicians).toEqual(response);
-  }));
+      component.getAllTechnicians();
 
-  it('Should call getTechnicianById and return list of technicians', async(() => {
-    const response: TechnicianModel[] = [];
+      expect(toastrMock.error).toHaveBeenCalledWith(
+        'Error Get Technicians Mock',
+        errorGenericMsg
+      );
+    });
+  });
 
-    spyOn(technicianService, 'getTechnicianById').and.returnValue(of(response));
+  describe('[Method deleteTechnician]', () => {
+    it('Delete technician success', () => {
+      const technicianIdMock = '1036671649';
+      technicianServiceMock.deleteTechnicians.and.returnValue(of('Success'));
 
-    listTechnicianComponent.getTechnicianById();
+      component.deleteTechnician(technicianIdMock);
 
-    fixture.detectChanges();
+      expect(toastrMock.success).toHaveBeenCalledWith('Tecnico Eliminado.');
+    });
 
-    expect(listTechnicianComponent.listTechnicians).toEqual(response);
-  }));
+    it('Delete technciian failure', () => {
+      const technicianIdMock = '';
+      const errorResponseMock = new HttpErrorResponse({
+        error: { code: '', message: 'Error Delete Technician Mock' },
+        status: 400,
+        statusText: 'Bad Request',
+      });
+      technicianServiceMock.deleteTechnicians.and.returnValue(
+        throwError(() => new HttpErrorResponse(errorResponseMock))
+      );
 
-  it('Should call deleteTechnicians and return list of technicians', async(() => {
-    const response: TechnicianModel[] = [];
+      component.deleteTechnician(technicianIdMock);
 
-    spyOn(technicianService, 'deleteTechnicians').and.returnValue(of(response));
-
-    listTechnicianComponent.deleteTechnician();
-
-    fixture.detectChanges();
-
-    expect(listTechnicianComponent.listTechnicians).toEqual(response);
-  }));
+      expect(toastrMock.error).toHaveBeenCalledWith(
+        'Error Delete Technician Mock',
+        errorGenericMsg
+      );
+    });
+  });
 });

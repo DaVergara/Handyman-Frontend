@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { AppointmentService } from 'src/app/shared/services/appointment-service/appointment.service';
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-list-appointments',
@@ -15,9 +16,7 @@ export class ListAppointmentsComponent implements OnInit {
   public showAppointments: AppointmentModel[];
   public appoitnment: AppointmentModel;
 
-  public message: string;
-
-  public searchId: string = '';
+  public searchId = '';
 
   private subscription: Subscription;
 
@@ -44,9 +43,9 @@ export class ListAppointmentsComponent implements OnInit {
       next: (response: AppointmentModel[]) =>
         (this.listAppointments = response),
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+        this.toastr.error(error.error.message, errorGenericMsg);
       },
-      complete: () => this.showAppointments = this.listAppointments,
+      complete: () => (this.showAppointments = this.listAppointments),
     });
   }
 
@@ -67,7 +66,7 @@ export class ListAppointmentsComponent implements OnInit {
     this._appointmentService.addAppointmentEdit(appointment);
   }
 
-  deleteTechnician(appointmentId: string): void {
+  deleteAppointment(appointmentId: string): void {
     this.subscription = this._appointmentService
       .deleteAppointment(appointmentId)
       .subscribe({
@@ -76,7 +75,7 @@ export class ListAppointmentsComponent implements OnInit {
           this.toastr.success('Servicio Eliminado');
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+          this.toastr.error(error.error.message, errorGenericMsg);
         },
       });
   }

@@ -3,12 +3,13 @@
     <h5 class="card-title mb-3">
       {{ title | uppercase }}
     </h5>
-    <form [formGroup]="appointmentForm" (ngSubmit)="onFormSubmit()">
+    <form [formGroup]="appointmentForm" id="appointment_form" (ngSubmit)="onFormSubmit()">
       <div class="form-floating mb-3" *ngIf="editFlag">
         <input
           type="text"
           formControlName="appointmentId"
           class="form-control form-control-lg"
+          id="appointment_id"
           [attr.disabled]="editFlag ? '' : null"
           placeholder="Identificación Cita"
           [class.valid]="this.appointmentForm.get('appointmentId')?.valid"
@@ -17,13 +18,14 @@
             this.appointmentForm.get('appointmentId')?.touched
           "
         />
-        <label for="serviceId" class="control-label" style="font-size: 120%">Identificación Cita</label>
+        <label for="appointment_id" class="control-label" style="font-size: 120%">Identificación Cita</label>
       </div>
       <div class="form-floating mb-3">
         <input
           type="text"
           formControlName="technicianId"
           class="form-control form-control-lg"
+          id="technician_id"
           placeholder="Identificación Técnico"
           [attr.disabled]="editFlag ? '' : null"
           oninput="this.value = this.value.replace(/[^0-9]/g, '');"
@@ -33,7 +35,7 @@
             this.appointmentForm.get('technicianId')?.touched
           "
         />
-        <label for="technicianId" class="control-label" style="font-size: 120%">Identificación Técnico</label>
+        <label for="technician_id" class="control-label" style="font-size: 120%">Identificación Técnico</label>
         <div>
           <small
             class="text-danger"

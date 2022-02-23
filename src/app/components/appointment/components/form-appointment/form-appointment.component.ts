@@ -5,20 +5,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-form-appointment',
   templateUrl: './form-appointment.component.html',
   styleUrls: ['./form-appointment.component.css'],
 })
+
 export class FormAppointmentComponent implements OnInit {
-  appointmentForm = new FormGroup({
-    appointmentId: new FormControl('', []),
-    technicianId: new FormControl('', [Validators.required]),
-    serviceId: new FormControl('', [Validators.required]),
-    serviceStarted: new FormControl('', [Validators.required]),
-    serviceFinished: new FormControl('', [Validators.required]),
-  });
+
+  appointmentForm: FormGroup;
 
   title = 'Añadir Servicio';
 
@@ -30,7 +27,18 @@ export class FormAppointmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.createAppointmentForm();
     this.getAppointmentEdit()
+  }
+
+  createAppointmentForm(): void {
+    this.appointmentForm = new FormGroup({
+      appointmentId: new FormControl('', []),
+      technicianId: new FormControl('', [Validators.required]),
+      serviceId: new FormControl('', [Validators.required]),
+      serviceStarted: new FormControl('', [Validators.required]),
+      serviceFinished: new FormControl('', [Validators.required]),
+    });
   }
 
   getAppointmentEdit(): void {
@@ -55,14 +63,8 @@ export class FormAppointmentComponent implements OnInit {
     }
   }
 
-  createAppoitment() {
-    const appointment: AppointmentModel = {
-      appointmentId: '',
-      technicianId: this.appointmentForm.value.technicianId,
-      serviceId: this.appointmentForm.value.serviceId,
-      serviceStarted: this.appointmentForm.value.serviceStarted,
-      serviceFinished: this.appointmentForm.value.serviceFinished,
-    };
+  createAppoitment(): void {
+    const appointment: AppointmentModel = this.getAppointmentFromForm();
     this._appointmentService.createAppointment(appointment).subscribe({
       next: () => {
         this.appointmentForm.reset();
@@ -71,27 +73,21 @@ export class FormAppointmentComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         this.toastr.error(
           error.error.message,
-          'Opps... ocurrio un error.'
+          errorGenericMsg
         );
       },
       complete: () => this._appointmentService.sendClickCall(),
     });
   }
 
-  editAppointment() {
-    const APPOINTMENT: AppointmentModel = {
-      appointmentId: this.appointmentForm.value.appointmentId,
-      technicianId: this.appointmentForm.value.technicianId,
-      serviceId: this.appointmentForm.value.serviceId,
-      serviceStarted: this.appointmentForm.value.serviceStarted,
-      serviceFinished: this.appointmentForm.value.serviceFinished,
-    };
-    this._appointmentService.updateAppointment(APPOINTMENT).subscribe({
+  editAppointment(): void {
+    const appointment: AppointmentModel = this.getAppointmentFromForm();
+    this._appointmentService.updateAppointment(appointment).subscribe({
       next: () => this.toastr.success('Servicio modificado con exito.'),
       error: (error: HttpErrorResponse) => {
         this.toastr.error(
           error.error.message,
-          'Opps... ocurrio un error.'
+          errorGenericMsg
         );
         this._appointmentService.sendClickCall();
       },
@@ -102,5 +98,16 @@ export class FormAppointmentComponent implements OnInit {
         this.editFlag = false;
       },
     });
+  }
+
+  getAppointmentFromForm(): AppointmentModel {
+    const appointment: AppointmentModel = {
+      appointmentId: this.appointmentForm.value.appointmentId,
+      technicianId: this.appointmentForm.value.technicianId,
+      serviceId: this.appointmentForm.value.serviceId,
+      serviceStarted: this.appointmentForm.value.serviceStarted,
+      serviceFinished: this.appointmentForm.value.serviceFinished,
+    };
+    return appointment;
   }
 }

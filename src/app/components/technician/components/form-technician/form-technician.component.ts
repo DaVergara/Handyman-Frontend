@@ -4,6 +4,7 @@ import { TechnicianService } from 'src/app/shared/services/technician-service/te
 import { TechnicianModel } from './../../../../shared/models/technician';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-form-technician',
@@ -11,19 +12,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./form-technician.component.css'],
 })
 export class FormTechnicianComponent implements OnInit {
-  technicianForm = new FormGroup({
-    technicianId: new FormControl('', [Validators.required]),
-    technicianName: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(40),
-      Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
-    ]),
-    technicianLastName: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(40),
-      Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
-    ]),
-  });
+
+  technicianForm: FormGroup;
 
   public title = 'Añadir Tecnico';
 
@@ -35,7 +25,24 @@ export class FormTechnicianComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.createTechnicianForm();
     this.getTechnicianEdit();
+  }
+
+  createTechnicianForm(): void {
+    this.technicianForm = new FormGroup({
+      technicianId: new FormControl('', [Validators.required]),
+      technicianName: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(40),
+        Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
+      ]),
+      technicianLastName: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(40),
+        Validators.pattern('^[a-zA-Z \u00f1\u00d1]*$'),
+      ]),
+    });
   }
 
   getTechnicianEdit(): void {
@@ -59,11 +66,7 @@ export class FormTechnicianComponent implements OnInit {
   }
 
   createTechnician(): void {
-    const technician: TechnicianModel = {
-      technicianId: this.technicianForm.value.technicianId,
-      technicianName: this.technicianForm.value.technicianName,
-      technicianLastName: this.technicianForm.value.technicianLastName,
-    };
+    const technician = this.getTechnicianFromForm();
     this._technicianService.createTechnicians(technician).subscribe({
       next: () => {
         this.technicianForm.reset();
@@ -72,7 +75,7 @@ export class FormTechnicianComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         this.toastr.error(
           error.error.message,
-          'Opps... ocurrio un error.'
+          errorGenericMsg
         );
       },
       complete: () => this._technicianService.sendClickCall(),
@@ -80,11 +83,7 @@ export class FormTechnicianComponent implements OnInit {
   }
 
   editTechnician(): void {
-    const technician: TechnicianModel = {
-      technicianId: this.technicianForm.value.technicianId,
-      technicianName: this.technicianForm.value.technicianName,
-      technicianLastName: this.technicianForm.value.technicianLastName,
-    };
+    const technician = this.getTechnicianFromForm();
     this._technicianService.updateTechnicians(technician).subscribe({
       next: () => {
         this.technicianForm.reset();
@@ -93,14 +92,25 @@ export class FormTechnicianComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         this.toastr.error(
           error.error.message,
-          'Opps... ocurrio un error.'
+          errorGenericMsg
         );
         this._technicianService.sendClickCall();
-        this.technicianForm.reset();
       },
-      complete: () => this._technicianService.sendClickCall(),
+      complete: () => {
+        this._technicianService.sendClickCall();
+        this.title = 'Añadir Tecnico';
+        this.editFlag = false;
+      },
     });
-    this.title = 'Añadir Tecnico';
-    this.editFlag = false;
   }
+
+  getTechnicianFromForm(): TechnicianModel {
+    const technician: TechnicianModel = {
+      technicianId: this.technicianForm.value.technicianId,
+      technicianName: this.technicianForm.value.technicianName,
+      technicianLastName: this.technicianForm.value.technicianLastName,
+    };
+    return technician;
+  }
+
 }

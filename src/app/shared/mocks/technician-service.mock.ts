@@ -2,15 +2,15 @@ import { of } from 'rxjs';
 
 export class TechnicianServiceMock {
 
-  getTechnicians = () => { return of() };
+  getTechnicians = jasmine.createSpy('TechnicianService.getTechnicians');
 
   getTechnicianById = () => {};
 
   createTechnicians = jasmine.createSpy('TechnicianService.createTechnicians');
 
-  updateTechnicians = () => {};
+  updateTechnicians = jasmine.createSpy('TechnicianService.updateTechnicians');
 
-  deleteTechnicians = () => {};
+  deleteTechnicians = jasmine.createSpy('TechnicianService.deleteTechnicians');
 
   addTechnicianEdit = () => {};
 
@@ -18,6 +18,6 @@ export class TechnicianServiceMock {
 
   sendClickCall = () => {};
 
-  getClickCall = () => {};
+  getClickCall = () => { return of() };
 
 }

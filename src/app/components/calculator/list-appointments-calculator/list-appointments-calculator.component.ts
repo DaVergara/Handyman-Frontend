@@ -4,6 +4,7 @@ import { AppointmentModel } from './../../../shared/models/appointment';
 import { Subscription } from 'rxjs';
 import { CalculatorService } from '../../../shared/services/calculator-service/calculator.service';
 import { Component, OnInit } from '@angular/core';
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-list-appointments-calculator',
@@ -15,8 +16,8 @@ export class ListAppointmentsCalculatorComponent implements OnInit {
   public showAppointments: AppointmentModel[];
   private subscription: Subscription;
 
-  public technicianId: string = '';
-  public weekNumber: number = 1;
+  public technicianId = '';
+  public weekNumber = 1;
 
   constructor(
     private readonly _calculatorService: CalculatorService,
@@ -32,7 +33,7 @@ export class ListAppointmentsCalculatorComponent implements OnInit {
         next: (response: AppointmentModel[]) =>
           (this.listAppointments = response),
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+          this.toastr.error(error.error.message, errorGenericMsg);
         },
         complete: () =>
           this._calculatorService.sendClickCall(

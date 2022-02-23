@@ -1,5 +1,5 @@
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 import { ToastrService } from 'ngx-toastr';
-//import { element } from 'protractor';
 import { TechnicianModel } from './../../../../shared/models/technician';
 import { Component, Input, OnInit } from '@angular/core';
 import { TechnicianService } from 'src/app/shared/services/technician-service/technician.service';
@@ -42,7 +42,7 @@ export class ListTechniciansComponent implements OnInit {
     this.subscription = this._technicianService.getTechnicians().subscribe({
       next: (response: TechnicianModel[]) => (this.listTechnicians = response),
       error: (error: HttpErrorResponse) => {
-        this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+        this.toastr.error(error.error.message, errorGenericMsg);
       },
       complete: () => (this.showTechnicians = this.listTechnicians),
     });
@@ -65,7 +65,7 @@ export class ListTechniciansComponent implements OnInit {
       .subscribe({
         next: (response: TechnicianModel) => (this.technician = response),
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+          this.toastr.error(error.error.message, errorGenericMsg);
         },
       });
   }
@@ -83,7 +83,7 @@ export class ListTechniciansComponent implements OnInit {
           this.toastr.success('Tecnico Eliminado.');
         },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+          this.toastr.error(error.error.message, errorGenericMsg);
         },
       });
   }

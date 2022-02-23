@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { CalculatorService } from './../../../shared/services/calculator-service/calculator.service';
 import { Component, OnInit } from '@angular/core';
+import { errorGenericMsg } from 'src/app/shared/constants/constants';
 
 @Component({
   selector: 'app-hours-worked',
@@ -36,9 +37,11 @@ export class HoursWorkedComponent implements OnInit {
     this.subscription = this._calculatorService
       .getHoursWorked(technicianId, weekNumber)
       .subscribe({
-        next: (response: any) => this.hoursWorked = new Map(Object.entries(response.hoursWorked)),
+        next: (response: any) => {
+          this.hoursWorked = new Map(Object.entries(response.hoursWorked));
+        },
         error: (error: HttpErrorResponse) => {
-          this.toastr.error(error.error.message, 'Opps... ocurrio un error.');
+          this.toastr.error(error.error.message, errorGenericMsg);
           this.restartMap();
         },
       });
