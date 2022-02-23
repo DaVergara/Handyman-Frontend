@@ -22,10 +22,10 @@ export class HoursWorkedComponent implements OnInit {
 
   ngOnInit(): void {
     this.restartMap();
-    this.onClick();
+    this.updateListListener();
   }
 
-  onClick(): void {
+  updateListListener(): void {
     this.subscription = this._calculatorService
       .getClickCall()
       .subscribe((data: any) => {

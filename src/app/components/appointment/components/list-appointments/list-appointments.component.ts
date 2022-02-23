@@ -27,10 +27,10 @@ export class ListAppointmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllAppointments();
-    this.onSave();
+    this.updateListListener();
   }
 
-  onSave(): void {
+  updateListListener(): void {
     this.subscription = this._appointmentService
       .getClickCall()
       .subscribe(() => {

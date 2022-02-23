@@ -11,7 +11,7 @@ export class TechnicianService {
 
   private technician$ = new Subject<TechnicianModel>();
 
-  private subject$ = new Subject<any>();
+  private notifyClick$ = new Subject<any>();
 
   constructor(private http: HttpClient) {}
 
@@ -47,10 +47,10 @@ export class TechnicianService {
   }
 
   public sendClickCall(): void {
-    this.subject$.next('');
+    this.notifyClick$.next('');
   }
 
   public getClickCall():Observable<any> {
-    return this.subject$.asObservable();
+    return this.notifyClick$.asObservable();
   }
 }

@@ -29,10 +29,10 @@ export class ListTechniciansComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllTechnicians();
-    this.onSave();
+    this.updateListListener();
   }
 
-  onSave(): void {
+  updateListListener(): void {
     this.subscription = this._technicianService.getClickCall().subscribe(() => {
       this.getAllTechnicians();
     });

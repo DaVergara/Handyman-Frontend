@@ -11,7 +11,7 @@ export class CalculatorService {
 
   private apiServerUrl: string = 'http://localhost:8080';
 
-  private subject$ = new Subject<any>();
+  private notifyClick$ = new Subject<any>();
 
   constructor(private readonly http: HttpClient) { }
 
@@ -28,11 +28,11 @@ export class CalculatorService {
       technicianId,
       weekNumber
     }
-    this.subject$.next(CONSULT);
+    this.notifyClick$.next(CONSULT);
   }
 
   getClickCall(): Observable<any> {
-    return this.subject$.asObservable();
+    return this.notifyClick$.asObservable();
   }
 
 }

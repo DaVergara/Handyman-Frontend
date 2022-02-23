@@ -8,6 +8,7 @@
           type="text"
           [(ngModel)]="technicianId"
           class="form-control mb-3"
+          id="technician_id"
           placeholder="Buscar"
           oninput="this.value = this.value.replace(/[^0-9]/g, '');"
         />
@@ -20,13 +21,21 @@
           max="53"
           [(ngModel)]="weekNumber"
           class="form-control mb-3"
+          id="week_number"
           placeholder="Semana"
           oninput="this.value = this.value.replace(/[^0-9]/g, '');"
         />
       </div>
       <div class="col-lg-3">
-        <br>
-        <button class="btn btn-success" (click)="getAppointmentsOfWeek()" [disabled]="technicianId.length === 0">Calcular</button>
+        <br />
+        <button
+          class="btn btn-success"
+          id="btn_calculate_hours"
+          (click)="getAppointmentsOfWeek()"
+          [disabled]="technicianId.length === 0"
+        >
+          Calcular
+        </button>
       </div>
     </div>
     <table class="table">
@@ -41,7 +50,9 @@
           <td>{{ appointment.appointmentId }}</td>
           <td>{{ appointment.serviceId }}</td>
           <td>{{ appointment.serviceStarted | date: "yyyy-MM-dd hh:mm a" }}</td>
-          <td>{{ appointment.serviceFinished | date: "yyyy-MM-dd hh:mm a" }}</td>
+          <td>
+            {{ appointment.serviceFinished | date: "yyyy-MM-dd hh:mm a" }}
+          </td>
         </tr>
       </tbody>
     </table>

@@ -3,12 +3,13 @@
     <h5 class="card-title mb-3">
       {{ title | uppercase }}
     </h5>
-    <form [formGroup]="technicianForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="technicianForm" id="technician_form" (ngSubmit)="onSubmit()">
       <div class="form-floating mb-3">
         <input
           type="text"
           formControlName="technicianId"
           class="form-control form-control-lg"
+          id="technician_id"
           [attr.disabled]="editFlag ? '' : null"
           placeholder="Identificación"
           oninput="this.value = this.value.replace(/[^0-9]/g, '');"
@@ -18,7 +19,7 @@
             this.technicianForm.get('technicianId')?.touched
           "
         />
-        <label for="technicianId" style="font-size: 120%">Id Tecnico</label>
+        <label for="technician_id" style="font-size: 120%">Id Tecnico</label>
         <div>
           <small
             class="text-danger"
@@ -36,6 +37,7 @@
           type="text"
           formControlName="technicianName"
           class="form-control form-control-lg"
+          id="technician_name"
           placeholder="Nombre"
           [class.valid]="this.technicianForm.get('technicianName')?.valid"
           [class.invalid]="
@@ -43,7 +45,7 @@
             this.technicianForm.get('technicianName')?.touched
           "
         />
-        <label for="technicianName" style="font-size: 120%">Nombre</label>
+        <label for="technician_name" style="font-size: 120%">Nombre</label>
         <div>
           <small
             class="text-danger"
@@ -79,6 +81,7 @@
           type="text"
           formControlName="technicianLastName"
           class="form-control form-control-lg"
+          id="technician_lastname"
           placeholder="Apellido"
           [class.valid]="this.technicianForm.get('technicianLastName')?.valid"
           [class.invalid]="
@@ -86,7 +89,7 @@
             this.technicianForm.get('technicianLastName')?.touched
           "
         />
-        <label for="technicianLastName" style="font-size: 120%">Apellido</label>
+        <label for="technician_lastname" style="font-size: 120%">Apellido</label>
         <div>
           <small
             class="text-danger"
@@ -121,6 +124,7 @@
         <button
           [disabled]="technicianForm.invalid"
           class="btn btn-success btn-lg"
+          id="btn_submit"
           type="submit"
         >
           Aceptar

@@ -11,7 +11,7 @@ export class AppointmentService {
 
   private appointment$ = new Subject<AppointmentModel>();
 
-  private subject$ = new Subject<any>();
+  private notifyClick$ = new Subject<any>();
 
   constructor(private http: HttpClient) {}
 
@@ -43,10 +43,10 @@ export class AppointmentService {
   }
 
   sendClickCall() {
-    this.subject$.next('');
+    this.notifyClick$.next('');
   }
 
   getClickCall() {
-    return this.subject$.asObservable();
+    return this.notifyClick$.asObservable();
   }
 }
